@@ -219,6 +219,7 @@ public:
     }
 	bool search(point data){
 		bool ans = bbst_search(p,data);
+		return ans;
 	}
 
     void traverse(eventNode*p){
@@ -238,7 +239,7 @@ public:
 };
 
 struct statusNode{
-	int data;
+	int data; // y-coordinate of intersection point of sweep line with segment at event pts
 	int segId;
 	int color;
 	statusNode* par;
@@ -255,10 +256,13 @@ struct statusNode{
 };
 
 class sweepLineStatus{
-	sweepLineStatus*p;
+	statusNode*p;
 public:
 	sweepLineStatus(){
 		p=NULL;
+	}
+	statusNode*getRoot(){
+		return p;
 	}
 	statusNode* insert(statusNode*p,statusNode*q){
 		if(p==NULL){
@@ -291,8 +295,8 @@ public:
     	tmp->left->par = tmp;
     }
 
-    void rightRotate(statusNode*&p,*&q){
-    	eventNode * tmp = q->left;
+    void rightRotate(statusNode*&p,statusNode*&q){
+    	statusNode * tmp = q->left;
     	q->left = tmp->right;
     	if(q->left){q->left->par=q;}
     	tmp->par = q->par;
@@ -308,16 +312,16 @@ public:
 
     }
 
-    void fixRedParentAnamoly(eventNode*&p,eventNode*&q){
+    void fixRedParentAnamoly(statusNode*&p,statusNode*&q){
 
-    	eventNode* parent = NULL,*grandparent=NULL;
+    	statusNode* parent = NULL,*grandparent=NULL;
     	// Violation would occur if parent node is red 
     	while((q!=p)&&(q->color==RED)&&(q->par->color==RED)){
     		parent = q->par;
     		grandparent = q->par->par;
     		/* Case 1 : parent is left child of grandparent */
     		if(parent==grandparent->left){
-    			eventNode* uncle = grandparent->right; // sibling of parent
+    			statusNode* uncle = grandparent->right; // sibling of parent
     			 /* Case 1.1 : uncle node is red : push the violation upward */
     			 if(uncle&&uncle->color==RED){
     			 	parent->color=BLACK;
@@ -345,7 +349,7 @@ public:
     		/* Case 2 : parent is right child of grandparent */
     		else
     		{
-    			eventNode* uncle= grandparent->left;
+    			statusNode* uncle= grandparent->left;
     			/*Case 2.1*/
     			if(uncle&&uncle->color==RED){
     			 	parent->color=BLACK;
@@ -379,13 +383,262 @@ public:
     }
 
 	void balancedInsert(point & data){
-		eventNode*q = new eventNode(data);
+		statusNode*q = new statusNode(data.y,data.segId);
 		p = insert(p,q);
 		fixRedParentAnamoly(p,q);
 	}
+	bool bbst_search(statusNode*p,point data){
+    	if(p==NULL){
+    		return false;
+    	}
+    	if(p->segId==data.segId){
+    		return true;
+    	}
+    	return bbst_search(p->left,data)||bbst_search(p->right,data);
+    }
+	bool search(point data){
+		bool ans = bbst_search(p,data);
+		return ans;
+	}
+	statusNode*get_node(statusNode*p,point data){
+		if(p==NULL){
+    		return NULL;
+    	}
+    	if(p->segId==data.segId){
+    		return p;
+    	}
+    	statusNode*l = get_node(p->left,data);
+    	if(l!=NULL){
+    		return l;
+    	}
+    	statusNode*r = get_node(p->right,data);
+    	if(r!=NULL){
+    		return r;
+    	}
+
+    	return NULL;
+	}
+	int above_segment(point data){
+		int curr = data.y;
+		statusNode*req = p;
+		int ans=-1;
+		while(req!=NULL){
+			if(req->data<=curr){
+				req=req->right;
+			}
+			else{
+				ans = req->segId;
+				req=req->left;
+			}
+		}
+	    return ans;
+	}
+	int below_segment(point data){
+		int curr = data.y;
+		statusNode*req = p;
+		int ans=-1;
+		while(req!=NULL){
+			if(req->data>=curr){
+				req=req->left;
+			}
+			else{
+				ans = req->segId;
+				req=req->right;
+			}
+		}
+	    return ans;
+	}
+
+	statusNode*successor(statusNode*target){
+		statusNode*x=target;
+		while(x->left){
+			x=x->left;
+		}
+		return x;
+	}
+
+	void delete_node(point data){
+		statusNode*p=getRoot();
+		if(p==NULL){
+			return;
+		}
+		statusNode* target = get_node(p,data);
+		balancedRemove(p,target);
+	}
+
+	void balancedRemove(statusNode*&p,statusNode*&target){
+		statusNode*u=NULL;
+		if(target->left&&target->right){
+			u = successor(target);
+		}
+		else if(target->left){
+           u = target->left;
+		}
+		else if(target->right){
+			u = target->right;
+		}
+		statusNode*parent = target->par;
+		int doubleBlack=0;
+		if(((u==NULL)||(u->color==BLACK))&&(target->color==BLACK)){
+           doubleBlack=1;
+		}
+		if(!u){
+			if(target==p){
+				p=NULL;
+			}
+			else{
+				if(doubleBlack){
+					fixDBAnamoly(p,target);
+				}
+				else{
+					statusNode*sibling=NULL;
+					if(target->par->left==target){
+						sibling=target->par->right;
+					} 
+					else if(target->par->right==target){
+						sibling=target->par->left;
+					}
+					if(sibling){
+						sibling->color=RED;
+					}
+				}
+				if(target->par->left==target){
+					parent->left=NULL;
+				}
+				else{
+					parent->right=NULL;
+				}
+			}
+			delete target;
+			return;
+		}
+
+		if(target->left==NULL||target->right==NULL){
+			if(target==p){
+				target->data = u->data;
+				target->segId=u->segId;
+				target->left=NULL;
+				target->right=NULL;
+				delete u;
+			}
+			else{
+				if(target->par->left==target){
+					parent->left=u;
+				}
+				else{
+					parent->right=u;
+				}
+				delete target;
+				u->par = parent;
+				if(doubleBlack){
+					fixDBAnamoly(p,u);
+				}
+				else{
+					u->color=BLACK;
+				}
+			}
+			return;
+		}
+		int tmpdata,tmpsid;
+		tmpdata = u->data;
+		tmpsid=u->segId;
+		u->data = target->data;
+		u->segId=target->segId;
+		target->data=tmpdata;
+		target->segId=tmpsid;
+		balancedRemove(p,u);
+	}
+
+	void fixDBAnamoly(statusNode*&p,statusNode*&target){
+		if(target==p){
+			return;
+		}
+        statusNode*sibling=NULL;
+		if(target->par->left==target){
+			sibling=target->par->right;
+		} 
+		else if(target->par->right==target){
+			sibling=target->par->left;
+		}
+		statusNode*parent = target->par;
+		if(!sibling){
+			fixDBAnamoly(p,parent);
+		}
+		else{
+			if(sibling->color==RED){
+				parent->color=RED;
+				sibling->color=BLACK;
+				if(sibling->par->left==sibling){
+					rightRotate(p,parent);
+				}
+				else{
+					leftRotate(p,parent);
+				}
+				fixDBAnamoly(p,target);
+			}
+			else{
+				if((sibling->left&&sibling->left->color==RED)||(sibling->right&&sibling->right->color==RED)){
+					if((sibling->left&&sibling->left->color==RED)){
+						if(sibling->par->left==sibling){
+							sibling->left->color=sibling->color;
+							sibling->color=parent->color;
+							rightRotate(p,parent);
+						}
+						else{
+							sibling->left->color=parent->color;
+							rightRotate(p,sibling);
+							leftRotate(p,parent);
+						}
+					}
+					else{
+						if(sibling->par->left==sibling){
+							sibling->right->color=parent->color;
+							leftRotate(p,sibling);
+							rightRotate(p,parent);
+						}
+						else{
+							sibling->right->color=sibling->color;
+							sibling->color=parent->color;
+							leftRotate(p,parent);
+						}
+					}
+					parent->color=BLACK;
+				}
+				else{
+					sibling->color=RED;
+					if(parent->color==BLACK){
+						fixDBAnamoly(p,parent);
+					}
+					else{
+						parent->color=BLACK;
+					}
+				}
+			}
+		}
+	}
+	void traverse(statusNode*p){
+    	if(p==NULL){
+    		return;
+    	}
+    	traverse(p->left);
+    	cout<<"("<<p->data<<","<<p->segId<<")"<<endl;
+    	traverse(p->right);
+
+    }
+    void inorder(){
+    	traverse(p);
+    }
+
 
 };
 
+
+point get_intersection(Segment s1,Segment s2){
+
+
+
+
+}
 
 
 int main(){
@@ -429,9 +682,41 @@ int main(){
 	pts.balancedInsert(h);
 	pts.balancedInsert(i);
 	cout<<pts.search(a)<<endl;
-
-
 	pts.inorder();
+    cout<<"==============="<<endl;
+	sweepLineStatus lines;
+	point a1 = point(1,2,0,start);
+	point b1 = point(311,1,1,start);
+	point c1 = point(41,2,2,start);
+	point d1 = point(2,2,3,start);
+	point e1 = point(72,2,4,start);
+	point f1 = point(71,3,5,start);
+	point g1 = point(5,5,6,start);
+	point h1 = point(92,2122,7,start);
+	point i1 = point(82,21,8,start);
+
+	lines.balancedInsert(a1);
+	lines.balancedInsert(b1);
+	lines.balancedInsert(c1);
+	lines.balancedInsert(d1);
+	lines.balancedInsert(e1);
+	lines.balancedInsert(f1);
+	lines.balancedInsert(g1);
+	lines.balancedInsert(h1);
+	lines.balancedInsert(i1);
+
+	lines.inorder();
+	lines.delete_node(h1);
+	lines.delete_node(i1);
+
+	cout<<"======"<<endl;
+	lines.inorder();
+
+
+
+
+
+
 	return 0;
 
 
