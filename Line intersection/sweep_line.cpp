@@ -239,7 +239,7 @@ public:
 };
 
 struct statusNode{
-	Segment data; // y-coordinate of intersection point of sweep line with segment at event pts
+	Segment data;
 	int color;
 	statusNode* par;
     statusNode* left;
@@ -433,11 +433,11 @@ public:
 
     	return NULL;
 	}
-	/*int above_segment(point data){
+    int get_above_segment(Segment data){
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(isBelow(data,p->data)){
+			if(isBelow(data.p,p->data)){
 				req=req->right;
 			}
 			else{
@@ -447,11 +447,11 @@ public:
 		}
 	    return ans;
 	}
-	int below_segment(point data){
+	int get_below_segment(Segment data){
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(isAbove(data,p->data)){
+			if(isAbove(data.p,p->data)){
 				req=req->left;
 			}
 			else{
@@ -460,7 +460,7 @@ public:
 			}
 		}
 	    return ans;
-	}*/
+	}
 
 	statusNode*successor(statusNode*target){
 		statusNode*x=target;
@@ -636,6 +636,12 @@ public:
     }
     void inorder(){
     	traverse(p);
+    }
+    void swap_nodes(Segment s1,Segment s2){
+    	statusNode* n1 = get_node(p,s1);
+    	statusNode* n2 = get_node(p,s2);
+    	swap(n1->data,n2->data);
+    	swap(n1->color,n2->color);
     }
 
 
