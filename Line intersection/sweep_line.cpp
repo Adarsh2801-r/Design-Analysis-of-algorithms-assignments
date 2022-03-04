@@ -239,19 +239,17 @@ public:
 };
 
 struct statusNode{
-	int data; // y-coordinate of intersection point of sweep line with segment at event pts
-	int segId;
+	Segment data; // y-coordinate of intersection point of sweep line with segment at event pts
 	int color;
 	statusNode* par;
     statusNode* left;
 	statusNode* right;
-    statusNode(int y_coordinate, int s){
-    	this->data=y_coordinate;
+    statusNode(Segment seg){
+    	this->data=seg;
     	par=NULL;
     	left=NULL;
     	right=NULL;
     	this->color=RED; 
-    	this->segId=s;
     }
 };
 
@@ -264,15 +262,32 @@ public:
 	statusNode*getRoot(){
 		return p;
 	}
+	bool isBelow(point a,Segment s){
+		int a1 = s.p.y - s.q.y;
+		int b1 = s.q.x - s.p.x;
+		int c1 = s.p.x*s.q.y - s.q.x*s.p.y;
+		int x1 = a.x;
+		int y1 = a.y;
+		return (a1*x1+b1*y1+c1<0 and b1>0) or (a1*x1+b1*y1+c1>0 and b1<0);
+	}
+	bool isAbove(point a,Segment s){
+		int a1 = s.p.y - s.q.y;
+		int b1 = s.q.x - s.p.x;
+		int c1 = s.p.x*s.q.y - s.q.x*s.p.y;
+		int x1 = a.x;
+		int y1 = a.y;
+		return (a1*x1+b1*y1+c1>0 and b1>0) or (a1*x1+b1*y1+c1<0 and b1<0);
+	}
+
 	statusNode* insert(statusNode*p,statusNode*q){
 		if(p==NULL){
 			return q;
 		}	
-		if(((q->data))<((p->data))){
+		if(isBelow(q->data.p,p->data)){
 			p->left = insert(p->left,q);
 			p->left->par=p;
 		}
-		else if(((q->data))>=((p->data))){
+		else if(isAbove(q->data.p,p->data)){
 			p->right = insert(p->right,q);
 			p->right->par=p;
 		}
@@ -382,29 +397,29 @@ public:
         p->color=BLACK;
     }
 
-	void balancedInsert(point & data){
-		statusNode*q = new statusNode(data.y,data.segId);
+	void balancedInsert(Segment & data){
+		statusNode*q = new statusNode(data);
 		p = insert(p,q);
 		fixRedParentAnamoly(p,q);
 	}
-	bool bbst_search(statusNode*p,point data){
+	bool bbst_search(statusNode*p,Segment data){
     	if(p==NULL){
     		return false;
     	}
-    	if(p->segId==data.segId){
+    	if(p->data.segId==data.segId){
     		return true;
     	}
     	return bbst_search(p->left,data)||bbst_search(p->right,data);
     }
-	bool search(point data){
+	bool search(Segment data){
 		bool ans = bbst_search(p,data);
 		return ans;
 	}
-	statusNode*get_node(statusNode*p,point data){
+	statusNode*get_node(statusNode*p,Segment data){
 		if(p==NULL){
     		return NULL;
     	}
-    	if(p->segId==data.segId){
+    	if(p->data.segId==data.segId){
     		return p;
     	}
     	statusNode*l = get_node(p->left,data);
@@ -418,36 +433,34 @@ public:
 
     	return NULL;
 	}
-	int above_segment(point data){
-		int curr = data.y;
+	/*int above_segment(point data){
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(req->data<=curr){
+			if(isBelow(data,p->data)){
 				req=req->right;
 			}
 			else{
-				ans = req->segId;
+				ans = req->data.segId;
 				req=req->left;
 			}
 		}
 	    return ans;
 	}
 	int below_segment(point data){
-		int curr = data.y;
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(req->data>=curr){
+			if(isAbove(data,p->data)){
 				req=req->left;
 			}
 			else{
-				ans = req->segId;
+				ans = req->data.segId;
 				req=req->right;
 			}
 		}
 	    return ans;
-	}
+	}*/
 
 	statusNode*successor(statusNode*target){
 		statusNode*x=target;
@@ -457,7 +470,7 @@ public:
 		return x;
 	}
 
-	void delete_node(point data){
+	void delete_node(Segment data){
 		statusNode*p=getRoot();
 		if(p==NULL){
 			return;
@@ -516,7 +529,6 @@ public:
 		if(target->left==NULL||target->right==NULL){
 			if(target==p){
 				target->data = u->data;
-				target->segId=u->segId;
 				target->left=NULL;
 				target->right=NULL;
 				delete u;
@@ -539,13 +551,10 @@ public:
 			}
 			return;
 		}
-		int tmpdata,tmpsid;
+		Segment tmpdata;
 		tmpdata = u->data;
-		tmpsid=u->segId;
 		u->data = target->data;
-		u->segId=target->segId;
 		target->data=tmpdata;
-		target->segId=tmpsid;
 		balancedRemove(p,u);
 	}
 
@@ -621,7 +630,7 @@ public:
     		return;
     	}
     	traverse(p->left);
-    	cout<<"("<<p->data<<","<<p->segId<<")"<<endl;
+    	cout<<p->data.segId<<endl;
     	traverse(p->right);
 
     }
@@ -686,31 +695,23 @@ int main(){
     cout<<"==============="<<endl;
 	sweepLineStatus lines;
 	point a1 = point(1,2,0,start);
-	point b1 = point(311,1,1,start);
-	point c1 = point(41,2,2,start);
-	point d1 = point(2,2,3,start);
+	point b1 = point(8,1,1,end);
+	point c1 = point(2,5,2,start);
+	point d1 = point(4,2,3,end);
 	point e1 = point(72,2,4,start);
 	point f1 = point(71,3,5,start);
 	point g1 = point(5,5,6,start);
 	point h1 = point(92,2122,7,start);
 	point i1 = point(82,21,8,start);
 
-	lines.balancedInsert(a1);
-	lines.balancedInsert(b1);
-	lines.balancedInsert(c1);
-	lines.balancedInsert(d1);
-	lines.balancedInsert(e1);
-	lines.balancedInsert(f1);
-	lines.balancedInsert(g1);
-	lines.balancedInsert(h1);
-	lines.balancedInsert(i1);
+    Segment s1 = Segment(c1,d1,1);
+    Segment s2 = Segment(a1,b1,0);
+    lines.balancedInsert(s1);
+    lines.balancedInsert(s2);
+    lines.delete_node(s1);
+       	//cout<<"======"<<endl;
+    lines.inorder();
 
-	lines.inorder();
-	lines.delete_node(h1);
-	lines.delete_node(i1);
-
-	cout<<"======"<<endl;
-	lines.inorder();
 
 
 
