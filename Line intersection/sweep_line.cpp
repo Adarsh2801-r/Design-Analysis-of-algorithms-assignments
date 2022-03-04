@@ -1,8 +1,8 @@
 #include <iostream> 
 #include<bits/stdc++.h>
 
-#define start -1
-#define end 1
+#define lft -1
+#define rt 1
 #define RED 2
 #define BLACK 3
 
@@ -50,6 +50,8 @@ struct Segment{
 	
 
 };
+
+vector<point>v;
 
 struct eventNode{
 	point data;
@@ -228,6 +230,7 @@ public:
     	}
     	traverse(p->left);
     	cout<<"("<<p->data.x<<","<<p->data.y<<")"<<endl;
+    	v.push_back(p->data);
     	traverse(p->right);
 
     }
@@ -437,11 +440,12 @@ public:
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(isBelow(data.p,p->data)){
+			if(isAbove(data.p,p->data)){
 				req=req->right;
 			}
 			else{
-				ans = req->data.segId;
+				if(req->data.segId!=data.segId){
+				ans = req->data.segId;}
 				req=req->left;
 			}
 		}
@@ -451,11 +455,12 @@ public:
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(isAbove(data.p,p->data)){
+			if(isBelow(data.p,p->data)){
 				req=req->left;
 			}
 			else{
-				ans = req->data.segId;
+				if(req->data.segId!=data.segId){
+				ans = req->data.segId;}
 				req=req->right;
 			}
 		}
@@ -655,51 +660,60 @@ point get_intersection(Segment s1,Segment s2){
 
 }
 
+bool comp(const Segment&a,const Segment&b){
+	return a.p.x<b.p.x;
+}
+
 
 int main(){
 	vector<point> intersections;// to find
-	vector<Segment> segments ; //given
-	int n = 6;
-	/*for(int i=0;i<n;i++){
+	vector<Segment> segments; //given
+	int n = 5;
+	for(int i=0;i<n;i++){
 		int p1,q1,p2,q2;
 		cin>>p1>>q1>>p2>>q2;
-		point startpt = point(p1,q1,i,start);
-		point endpt = point(p2,q2,i,end);
+		point startpt = point(p1,q1,i,lft);
+		point endpt = point(p2,q2,i,rt);
 		Segment s = Segment(startpt,endpt,i);
 		segments.push_back(s);
 	}
+	sort(segments.begin(),segments.end(),comp);
+	for(int i=0;i<n;i++){
+		segments[i].segId=i;
+		segments[i].p.segId=i;
+		segments[i].q.segId=i;
+		
+	}
+	eventQueue pts;
 	for(int i=0;i<n;i++){
 		cout<<"("<<segments[i].p.x<<","<<segments[i].p.y<<")"<<"::"<<"("<<segments[i].q.x<<","<<segments[i].q.y<<")"<<"===>"<<segments[i].segId<<endl;
 		cout<<segments[i].p.segId<<"||"<<segments[i].q.segId<<endl;
+		pts.balancedInsert(segments[i].p);
+		pts.balancedInsert(segments[i].q);
+	}
+		pts.inorder();
+		sweepLineStatus lines;
 
-	}*/
+	cout<<"==============="<<endl;
+	for(int i=0;i<v.size();i++){
+		cout<<v[i].x<<"||"<<v[i].y<<"||"<<v[i].segId<<endl;
+		if(v[i].loc==lft){
+        lines.balancedInsert(segments[v[i].segId]);
+        cout<<lines.get_above_segment(segments[v[i].segId])<<"::"<<lines.get_below_segment(segments[v[i].segId])<<endl;
+        }
+        else{
+            
+        	lines.delete_node(segments[v[i].segId]);
+        }
+        lines.inorder();
+        cout<<"==============="<<endl;
 
+	}
 
-
-	eventQueue pts;
-	point a = point(1,2);
-	point b = point(311,1);
-	point c = point(41,2);
-	point d = point(2,2);
-	point e = point(72,2);
-	point f = point(71,3);
-	point g = point(5,5);
-	point h = point(92,2122);
-	point i = point(82,21);
-
-	pts.balancedInsert(a);
-	pts.balancedInsert(b);
-	pts.balancedInsert(c);
-	pts.balancedInsert(d);
-	pts.balancedInsert(e);
-	pts.balancedInsert(f);
-	pts.balancedInsert(g);
-	pts.balancedInsert(h);
-	pts.balancedInsert(i);
-	cout<<pts.search(a)<<endl;
-	pts.inorder();
     cout<<"==============="<<endl;
-	sweepLineStatus lines;
+    lines.inorder();
+
+	/*sweepLineStatus lines;
 	point a1 = point(1,2,0,start);
 	point b1 = point(8,1,1,end);
 	point c1 = point(2,5,2,start);
@@ -716,7 +730,7 @@ int main(){
     lines.balancedInsert(s2);
     lines.delete_node(s1);
        	//cout<<"======"<<endl;
-    lines.inorder();
+    lines.inorder();*/
 
 
 
