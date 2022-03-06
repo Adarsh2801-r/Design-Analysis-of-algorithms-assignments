@@ -476,7 +476,6 @@ public:
 	}
 
 	void delete_node(Segment data){
-		statusNode*p=getRoot();
 		if(p==NULL){
 			return;
 		}
@@ -652,6 +651,58 @@ public:
 
 };
 
+bool onSeg(point l,point m,point r){
+	int mx_x = max(l.x,r.x);
+	int mn_x = min(l.x,r.x);
+	int mx_y = max(l.y,r.y);
+	int mn_y = min(l.y,r.y);
+	return ((m.x<=mx_x && m.x>=mn_x) && (m.y<=mx_y && m.y>=mn_y));
+}
+
+int find_orientation(point l,point m,point r){
+	int orient = (m.y-l.y)*(r.x-m.x) - (m.x-l.x)*(r.y-m.y);
+	if(orient>0){
+		return 1;
+	}
+	else if(orient<0){
+		return 2;
+	}
+	else if(orient==0){
+		return 0;
+	}
+	return -1;
+}
+
+bool check_intersection(Segment s1,Segment s2){
+	point ps1 = s1.p;
+	point qs1 = s1.q;
+	point ps2 = s2.p;
+	point qs2 = s2.q;
+	int orient_1 = find_orientation(ps1,qs1,ps2);
+	int orient_2 = find_orientation(ps1,qs1,qs2);
+	int orient_3 = find_orientation(ps2,qs2,ps1);
+	int orient_4 = find_orientation(ps2,qs2,qs1);
+
+	if(orient_1!=orient_2 && orient_4!=orient_3){
+		return true;
+	}
+
+	if(orient_1==0&&onSeg(ps1,ps2,qs1)){
+		return true;
+	}
+	if(orient_2==0&&onSeg(ps1,qs2,qs1)){
+		return true;
+	}
+	if(orient_3==0&&onSeg(ps2,ps1,qs2)){
+		return true;
+	}
+	if(orient_4==0&&onSeg(ps2,qs1,qs2)){
+		return true;
+	}
+	return false;
+
+}
+
 
 point get_intersection(Segment s1,Segment s2){
 
@@ -668,6 +719,7 @@ bool comp(const Segment&a,const Segment&b){
 int main(){
 	vector<point> intersections;// to find
 	vector<Segment> segments; //given
+	// To test operations on data structure
 	int n = 5;
 	for(int i=0;i<n;i++){
 		int p1,q1,p2,q2;
@@ -713,25 +765,7 @@ int main(){
     cout<<"==============="<<endl;
     lines.inorder();
 
-	/*sweepLineStatus lines;
-	point a1 = point(1,2,0,start);
-	point b1 = point(8,1,1,end);
-	point c1 = point(2,5,2,start);
-	point d1 = point(4,2,3,end);
-	point e1 = point(72,2,4,start);
-	point f1 = point(71,3,5,start);
-	point g1 = point(5,5,6,start);
-	point h1 = point(92,2122,7,start);
-	point i1 = point(82,21,8,start);
-
-    Segment s1 = Segment(c1,d1,1);
-    Segment s2 = Segment(a1,b1,0);
-    lines.balancedInsert(s1);
-    lines.balancedInsert(s2);
-    lines.delete_node(s1);
-       	//cout<<"======"<<endl;
-    lines.inorder();*/
-
+	
 
 
 
