@@ -13,11 +13,13 @@ using namespace std;
 struct point{
 	double x,y;
 	int segId=-1;
-	int loc=-1;
+	int segId1=-1; // used only if loc=0
+	int loc=0;
 	point(){
 		x=0;
 		y=0;
 		segId=-1;
+		loc=0;
 	}
 	point(double x1,double y1){
 		x=x1;
@@ -27,6 +29,13 @@ struct point{
 		x=x1;
 		y=y1;
 		segId = sid;
+		loc=l;
+	}
+	point(double x1,double y1,int sid,int sid1,int l){
+		x=x1;
+		y=y1;
+		segId = sid;
+		segId1=sid1;
 		loc=l;
 	}
 };
@@ -73,6 +82,9 @@ class eventQueue{
 public:
 	eventQueue(){
 		p=NULL;
+	}
+	eventNode*getRoot(){
+		return p;
 	}
 
 	eventNode* insert(eventNode*p,eventNode*q){
@@ -705,10 +717,20 @@ bool check_intersection(Segment s1,Segment s2){
 
 
 point get_intersection(Segment s1,Segment s2){
-
-
-
-
+	double x1 = s1.p.x;
+	double y1 = s1.p.y;
+	double x2 = s1.q.x;
+	double y2 = s1.q.y;
+	double a1 = s2.p.x;
+	double b1 = s2.p.y;
+	double a2 = s2.q.x;
+	double b2 = s2.q.y;
+    double m1 = (y2-y1)/(x2-x1);
+    double m2 = (b2-b1)/(a2-a1);
+	double x = (b1 - y1 + m1*x1 - m2*a1)/(m1-m2);
+	double y = m1*x + y1 - m1*x1;
+	point in = point(x,y,s1.segId,s2.segId,0);
+	return in;
 }
 
 bool comp(const Segment&a,const Segment&b){
@@ -743,35 +765,124 @@ int main(){
 		pts.balancedInsert(segments[i].p);
 		pts.balancedInsert(segments[i].q);
 	}
-		pts.inorder();
-		sweepLineStatus lines;
-
+	pts.inorder();
 	cout<<"==============="<<endl;
-	for(int i=0;i<v.size();i++){
-		cout<<v[i].x<<"||"<<v[i].y<<"||"<<v[i].segId<<endl;
-		if(v[i].loc==lft){
-        lines.balancedInsert(segments[v[i].segId]);
-        cout<<lines.get_above_segment(segments[v[i].segId])<<"::"<<lines.get_below_segment(segments[v[i].segId])<<endl;
-        }
-        else{
-            
-        	lines.delete_node(segments[v[i].segId]);
-        }
-        lines.inorder();
-        cout<<"==============="<<endl;
 
-	}
+	sweepLineStatus lines;
+	eventNode* root = pts.getRoot();
+    stack<eventNode*>st;
+    int flg=1;
+    while(flg){
+    	if(root==NULL){
+    		if(st.size()){
+    			root=st.top();
+                cout<<st.top()->data.x<<","<<st.top()->data.y<<"==>";
+                if(root->data.loc==-1){
+                	//left endpoint
+                	cout<<"left"<<":"<<root->data.segId<<endl;
+                	Segment curr = segments[root->data.segId];
+                    lines.balancedInsert(curr);
+                    int upper_id = lines.get_above_segment(curr);
+                    int lower_id = lines.get_below_segment(curr);
+                    if(upper_id!=-1){
+                    	Segment upper_neighbour = segments[upper_id];
+                    	if(check_intersection(curr,upper_neighbour)){
+                    		point in = get_intersection(curr,upper_neighbour);
+                    		pts.balancedInsert(in);
+                    	}
 
-    cout<<"==============="<<endl;
-    lines.inorder();
+                    }
+                    if(lower_id!=-1){
+                    	Segment lower_neighbour = segments[lower_id];
+                    	if(check_intersection(curr,lower_neighbour)){
+                    		point in = get_intersection(curr,lower_neighbour);
+                    		pts.balancedInsert(in);
+                    	}
+                    }
 
+                }
+                else if(root->data.loc==1){
+                	// right endpoint
+                	cout<<"right"<<":"<<root->data.segId<<endl;
+                	Segment curr = segments[root->data.segId];
+                    int upper_id = lines.get_above_segment(curr);
+                    int lower_id = lines.get_below_segment(curr);
+                    if(upper_id!=-1&&lower_id!=-1){
+                    	Segment upper_neighbour = segments[upper_id];
+                    	Segment lower_neighbour = segments[lower_id];
+                    	if(check_intersection(lower_neighbour,upper_neighbour)){
+                    		point in = get_intersection(lower_neighbour,upper_neighbour);
+                    		if(pts.search(in)==0){
+                    			pts.balancedInsert(in);
+                    		}
+                    	}
+                    }
+                    lines.delete_node(curr);
+                }
+                else{ 
+                	//intersection point
+                	cout<<"intersection"<<":"<<"{"<<root->data.segId<<","<<root->data.segId1<<"}"<<endl;
+                
+                	lines.swap_nodes(segments[root->data.segId],segments[root->data.segId1]);
+                	int up_seg = lines.get_above_segment(segments[root->data.segId]);
+                    int down_seg = lines.get_below_segment(segments[root->data.segId]);
+                	int up_seg1 = lines.get_above_segment(segments[root->data.segId1]);
+                	int down_seg1 = lines.get_below_segment(segments[root->data.segId1]);
+                	if(down_seg==root->data.segId1){
+                		// seg is above seg1
+                		if(up_seg!=-1){
+                			Segment upper_neighbour = segments[up_seg];
+                    	    if(check_intersection(segments[root->data.segId],upper_neighbour)){
+                    		   point in = get_intersection(segments[root->data.segId],upper_neighbour);
+                    		   pts.balancedInsert(in);
+                    	    }
+                		}
+                		if(down_seg1!=-1){
+                			Segment lower_neighbour = segments[down_seg1];
+                    	    if(check_intersection(segments[root->data.segId1],lower_neighbour)){
+                    		   point in = get_intersection(segments[root->data.segId1],lower_neighbour);
+                    		   pts.balancedInsert(in);
+                    	    }
+                		}
+                	}
+                	else if(down_seg1==root->data.segId){
+                		// seg1 above seg
+                		if(up_seg1!=-1){
+                			Segment upper_neighbour = segments[up_seg1];
+                    	    if(check_intersection(segments[root->data.segId1],upper_neighbour)){
+                    		   point in = get_intersection(segments[root->data.segId1],upper_neighbour);
+                    		   pts.balancedInsert(in);
+                    	    }
+                		}
+                		if(down_seg!=-1){
+                			Segment lower_neighbour = segments[down_seg];
+                    	    if(check_intersection(segments[root->data.segId],lower_neighbour)){
+                    		   point in = get_intersection(segments[root->data.segId],lower_neighbour);
+                    		   pts.balancedInsert(in);
+                    	    }
+                		}
+
+                	}
+
+                }
+                lines.inorder();
+                cout<<endl;
+                cout<<"==============="<<endl;
+    			st.pop();
+    			root=root->right;
+    		}
+    		else{
+    			flg=0;
+    		}
+
+    	}
+    	else{
+    		st.push(root);
+    		root=root->left;
+    	}
+
+    }
 	
-
-
-
-
-
-
 	return 0;
 
 
