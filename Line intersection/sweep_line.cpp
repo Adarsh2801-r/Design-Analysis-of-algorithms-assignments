@@ -1,7 +1,6 @@
 /**
  * @file sweep_line.cpp
  * @brief Line Segment Intersections
- * @author R Adarsh
  * @date 2022-03-22
  **************************************/
 
