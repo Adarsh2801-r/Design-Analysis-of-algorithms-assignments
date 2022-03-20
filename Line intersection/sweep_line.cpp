@@ -1,3 +1,11 @@
+/**
+ * @file sweep_line.cpp
+ * @brief Line Segment Intersections
+ * @author R Adarsh
+ * @date 2022-03-22
+ **************************************/
+
+
 #include <iostream> 
 #include<bits/stdc++.h>
 
@@ -9,12 +17,14 @@
 using namespace std;
 
 
-
+/**
+ * @brief Structure of a 2-D point 
+ **************************************/
 struct point{
-	double x,y;
-	int segId=-1;
-	int segId1=-1; // used only if loc=0
-	int loc=0;
+	double x,y;  /// coordinates of point
+	int segId=-1; /// Id of segment-1 on which point lies
+	int segId1=-1; /// Id of segment-2 on which point lies
+	int loc=0; /// indicates location of point on segment
 	point(){
 		x=0;
 		y=0;
@@ -40,9 +50,13 @@ struct point{
 	}
 };
 
+
+/**
+ * @brief Structure of a line segment 
+ **************************************/
 struct Segment{
-	point p,q;//p = left , q = right
-	int segId;
+	point p,q; ///p = left , q = right
+	int segId; 
 	Segment(){
         segId=-1;
 	}
@@ -60,11 +74,13 @@ struct Segment{
 
 };
 
-vector<point>v;
 
+/**
+ * @brief Structure of node in eventQueue 
+ **************************************/
 struct eventNode{
 	point data;
-	int color;
+	int color; 
 	eventNode* par;
     eventNode* left;
 	eventNode* right;
@@ -77,16 +93,30 @@ struct eventNode{
     }
 };
 
+
+
+/**
+ * @brief eventQueue to maintain the ordering of points according to x-coordinates
+ * @details Implements a red-black binary search tree (balanced BST) to maintain the ordered points. Supports insert and search operations. 
+ **************************************/
 class eventQueue{
 	eventNode*p;
 public:
 	eventQueue(){
 		p=NULL;
 	}
+
+
+    /**
+     * @brief function to get the root of BBST
+     **************************************/
 	eventNode*getRoot(){
 		return p;
 	}
-
+    
+    /**
+     * @brief function to insert node in eventQueue
+     **************************************/
 	eventNode* insert(eventNode*p,eventNode*q){
 		if(p==NULL){
 			return q;
@@ -112,7 +142,10 @@ public:
 
 		return p;
 	}
-    
+
+	/**
+     * @brief function left rotate about a node in BBST
+     **************************************/
     void leftRotate(eventNode*&p,eventNode*&q){
     	eventNode * tmp = q->right;
     	q->right = tmp->left;
@@ -129,6 +162,10 @@ public:
     	tmp->left->par = tmp;
     }
 
+
+    /**
+     * @brief function right rotate about a node in BBST
+     **************************************/
     void rightRotate(eventNode*&p,eventNode*&q){
     	eventNode * tmp = q->left;
     	q->left = tmp->right;
@@ -146,32 +183,35 @@ public:
 
     }
 
+    /**
+     * @brief function fix the anamolies/violations in BBST arising due to insert operation
+     **************************************/
     void fixRedParentAnamoly(eventNode*&p,eventNode*&q){
 
     	eventNode* parent = NULL,*grandparent=NULL;
-    	// Violation would occur if parent node is red 
+    	/// Violation would occur if parent node is red 
     	while((q!=p)&&(q->color==RED)&&(q->par->color==RED)){
     		parent = q->par;
     		grandparent = q->par->par;
-    		/* Case 1 : parent is left child of grandparent */
+    		///Case 1 : parent is left child of grandparent
     		if(parent==grandparent->left){
-    			eventNode* uncle = grandparent->right; // sibling of parent
-    			 /* Case 1.1 : uncle node is red : push the violation upward */
+    			eventNode* uncle = grandparent->right; /// sibling of parent
+    			 ///Case 1.1 : uncle node is red : push the violation upward 
     			 if(uncle&&uncle->color==RED){
     			 	parent->color=BLACK;
     			 	uncle->color=BLACK;
     			 	grandparent->color=RED;
     			 	q = grandparent;
     			 }
-    			 /* Case 1.2 : uncle node is black */
+    			 /// Case 1.2 : uncle node is black
     			 else{
-    			 	/* Case 1.2.1 */
+    			 	/// Case 1.2.1
     			 	if(q==parent->right){
     			 		leftRotate(p,parent);
     			 		q=parent;
     			 		parent=q->par;
     			 	}
-    			 	/* Case 1.2.2 */
+    			 	/// Case 1.2.2
                     swap(parent->color,grandparent->color);
                     rightRotate(p,grandparent);
                     q = parent;
@@ -180,26 +220,26 @@ public:
 
 
     		}
-    		/* Case 2 : parent is right child of grandparent */
+    		///Case 2 : parent is right child of grandparent 
     		else
     		{
     			eventNode* uncle= grandparent->left;
-    			/*Case 2.1*/
+    			/// Case 2.1
     			if(uncle&&uncle->color==RED){
     			 	parent->color=BLACK;
     			 	uncle->color=BLACK;
     			 	grandparent->color=RED;
     			 	q = grandparent;
     			 }
-    			 /*Case 2.2*/
+    			 /// Case 2.2
     			 else{
-    			 	/* Case 2.2.1 */
+    			 	/// Case 2.2.1
     			 	if(q==parent->left){
     			 		rightRotate(p,parent);
     			 		q=parent;
     			 		parent=q->par;
     			 	}
-    			 	/* Case 2.2.2 */
+    			 	/// Case 2.2.2 
                     swap(parent->color,grandparent->color);
                     leftRotate(p,grandparent);
                     q = parent;
@@ -216,12 +256,20 @@ public:
         p->color=BLACK;
     }
 
+
+    /**
+     * @brief entry-function facilitate insertion of a point in eventQueue
+     **************************************/
 	void balancedInsert(point & data){
 		eventNode*q = new eventNode(data);
 		p = insert(p,q);
 		fixRedParentAnamoly(p,q);
 	}
 
+    /**
+     * @brief function to indicate presence a node in eventQueue
+     * @return returns boolean value
+     **************************************/
     bool bbst_search(eventNode*p,point data){
     	if(p==NULL){
     		return false;
@@ -231,21 +279,32 @@ public:
     	}
     	return bbst_search(p->left,data)||bbst_search(p->right,data);
     }
+
+    /**
+     * @brief entry-function facilitate searching of a point in eventQueue
+     **************************************/
 	bool search(point data){
 		bool ans = bbst_search(p,data);
 		return ans;
 	}
 
+
+    /**
+     * @brief performs inorder traversal of binary tree to get the points in order
+     **************************************/
     void traverse(eventNode*p){
     	if(p==NULL){
     		return;
     	}
     	traverse(p->left);
     	cout<<"("<<p->data.x<<","<<p->data.y<<")"<<endl;
-    	v.push_back(p->data);
     	traverse(p->right);
 
     }
+
+    /**
+     * @brief entry-point to perform inorder traversal
+     **************************************/
     void inorder(){
     	traverse(p);
     }
@@ -253,6 +312,10 @@ public:
 
 };
 
+
+/**
+ * @brief structure of node in sweepLineStatus data structure
+ **************************************/
 struct statusNode{
 	Segment data;
 	int color;
@@ -268,15 +331,27 @@ struct statusNode{
     }
 };
 
+/**
+ * @brief sweepLinesStatus structure to maintain the ordering of line segments according to order intersected by sweep-line
+ * @details Implements a red-black binary search tree (balanced BST) to maintain the ordered segments. Supports insert , search and delete operations. 
+ **************************************/
 class sweepLineStatus{
 	statusNode*p;
 public:
 	sweepLineStatus(){
 		p=NULL;
 	}
+
+	/**
+     * @brief function to get root node of sweepLineStatus BBST
+     **************************************/
 	statusNode*getRoot(){
 		return p;
 	}
+
+	/**
+     * @brief function to check if a line is below another line along the sweep line
+     **************************************/
 	bool isBelow(point a,Segment s){
 		double a1 = s.p.y - s.q.y;
 		double b1 = s.q.x - s.p.x;
@@ -285,6 +360,10 @@ public:
 		double y1 = a.y;
 		return (a1*x1+b1*y1+c1<0 and b1>0) or (a1*x1+b1*y1+c1>0 and b1<0);
 	}
+
+	/**
+     * @brief function to check if a line is above another line along the sweep line
+     **************************************/
 	bool isAbove(point a,Segment s){
 		double a1 = s.p.y - s.q.y;
 		double b1 = s.q.x - s.p.x;
@@ -293,7 +372,10 @@ public:
 		double y1 = a.y;
 		return (a1*x1+b1*y1+c1>0 and b1>0) or (a1*x1+b1*y1+c1<0 and b1<0);
 	}
-
+    
+    /**
+     * @brief function to insert line segment into sweepLineStatus structure
+     **************************************/
 	statusNode* insert(statusNode*p,statusNode*q){
 		if(p==NULL){
 			return q;
@@ -309,6 +391,9 @@ public:
 		return p;
 	}
     
+    /**
+     * @brief function perform left rotation about a node in RBT
+     **************************************/
     void leftRotate(statusNode*&p,statusNode*&q){
     	statusNode * tmp = q->right;
     	q->right = tmp->left;
@@ -325,6 +410,9 @@ public:
     	tmp->left->par = tmp;
     }
 
+    /**
+     * @brief function perform right rotation about a node in RBT
+     **************************************/
     void rightRotate(statusNode*&p,statusNode*&q){
     	statusNode * tmp = q->left;
     	q->left = tmp->right;
@@ -342,32 +430,35 @@ public:
 
     }
 
+    /**
+     * @brief function to fix anamolies and violations due to insert operartions in RBT
+     **************************************/
     void fixRedParentAnamoly(statusNode*&p,statusNode*&q){
 
     	statusNode* parent = NULL,*grandparent=NULL;
-    	// Violation would occur if parent node is red 
+    	/// Violation would occur if parent node is red 
     	while((q!=p)&&(q->color==RED)&&(q->par->color==RED)){
     		parent = q->par;
     		grandparent = q->par->par;
-    		/* Case 1 : parent is left child of grandparent */
+    		/// Case 1 : parent is left child of grandparent
     		if(parent==grandparent->left){
-    			statusNode* uncle = grandparent->right; // sibling of parent
-    			 /* Case 1.1 : uncle node is red : push the violation upward */
+    			statusNode* uncle = grandparent->right; /// sibling of parent
+    			 /// Case 1.1 : uncle node is red : push the violation upward
     			 if(uncle&&uncle->color==RED){
     			 	parent->color=BLACK;
     			 	uncle->color=BLACK;
     			 	grandparent->color=RED;
     			 	q = grandparent;
     			 }
-    			 /* Case 1.2 : uncle node is black */
+    			 /// Case 1.2 : uncle node is black
     			 else{
-    			 	/* Case 1.2.1 */
+    			 	/// Case 1.2.1 
     			 	if(q==parent->right){
     			 		leftRotate(p,parent);
     			 		q=parent;
     			 		parent=q->par;
     			 	}
-    			 	/* Case 1.2.2 */
+    			 	/// Case 1.2.2
                     swap(parent->color,grandparent->color);
                     rightRotate(p,grandparent);
                     q = parent;
@@ -376,26 +467,26 @@ public:
 
 
     		}
-    		/* Case 2 : parent is right child of grandparent */
+    		/// Case 2 : parent is right child of grandparent 
     		else
     		{
     			statusNode* uncle= grandparent->left;
-    			/*Case 2.1*/
+    			/// Case 2.1
     			if(uncle&&uncle->color==RED){
     			 	parent->color=BLACK;
     			 	uncle->color=BLACK;
     			 	grandparent->color=RED;
     			 	q = grandparent;
     			 }
-    			 /*Case 2.2*/
+    			 /// Case 2.2
     			 else{
-    			 	/* Case 2.2.1 */
+    			 	/// Case 2.2.1 
     			 	if(q==parent->left){
     			 		rightRotate(p,parent);
     			 		q=parent;
     			 		parent=q->par;
     			 	}
-    			 	/* Case 2.2.2 */
+    			 	/// Case 2.2.2
                     swap(parent->color,grandparent->color);
                     leftRotate(p,grandparent);
                     q = parent;
@@ -411,12 +502,20 @@ public:
 
         p->color=BLACK;
     }
-
+    
+    /**
+     * @brief entry-function to perform insertion
+     **************************************/
 	void balancedInsert(Segment & data){
 		statusNode*q = new statusNode(data);
 		p = insert(p,q);
 		fixRedParentAnamoly(p,q);
 	}
+
+	/**
+     * @brief function to indicate presence a node in sweepLineStatus
+     * @return returns boolean value
+     **************************************/
 	bool bbst_search(statusNode*p,Segment data){
     	if(p==NULL){
     		return false;
@@ -426,10 +525,19 @@ public:
     	}
     	return bbst_search(p->left,data)||bbst_search(p->right,data);
     }
+
+    /**
+     * @brief entry-function to indicate presence a node
+     **************************************/
 	bool search(Segment data){
 		bool ans = bbst_search(p,data);
 		return ans;
 	}
+
+	/**
+     * @brief function to search for a node in sweepLineStatus structure
+     * @return returns pointer to the node having the segment
+     **************************************/
 	statusNode*get_node(statusNode*p,Segment data){
 		if(p==NULL){
     		return NULL;
@@ -448,6 +556,11 @@ public:
 
     	return NULL;
 	}
+
+	/**
+     * @brief function to get line segment above another line segment in sweepLineStatus structure
+     * @return returns segment id of above segment
+     **************************************/
     int get_above_segment(Segment data){
 		statusNode*req = p;
 		int ans=-1;
@@ -463,6 +576,11 @@ public:
 		}
 	    return ans;
 	}
+
+	/**
+     * @brief function to get line segment below another line segment in sweepLineStatus structure
+     * @return returns segment id of below segment
+     **************************************/
 	int get_below_segment(Segment data){
 		statusNode*req = p;
 		int ans=-1;
@@ -487,6 +605,9 @@ public:
 		return x;
 	}
 
+    /**
+     * @brief entry-function to delete a node
+     **************************************/
 	void delete_node(Segment data){
 		if(p==NULL){
 			return;
@@ -494,7 +615,10 @@ public:
 		statusNode* target = get_node(p,data);
 		balancedRemove(p,target);
 	}
-
+    
+    /**
+     * @brief performs delete operation of the node in RBT
+     **************************************/
 	void balancedRemove(statusNode*&p,statusNode*&target){
 		statusNode*u=NULL;
 		if(target->left&&target->right){
@@ -573,7 +697,10 @@ public:
 		target->data=tmpdata;
 		balancedRemove(p,u);
 	}
-
+    
+    /**
+     * @brief function to fix the anamolies after delete operation
+     **************************************/
 	void fixDBAnamoly(statusNode*&p,statusNode*&target){
 		if(target==p){
 			return;
@@ -641,6 +768,10 @@ public:
 			}
 		}
 	}
+
+	/**
+     * @brief function to perform inorder traversal
+     **************************************/
 	void traverse(statusNode*p){
     	if(p==NULL){
     		return;
@@ -650,9 +781,17 @@ public:
     	traverse(p->right);
 
     }
+
+    /**
+     * @brief entry-function to perform inorder traversal
+     **************************************/
     void inorder(){
     	traverse(p);
     }
+
+    /**
+     * @brief function to swap the contents of 2 nodes in binary tree
+     **************************************/
     void swap_nodes(Segment s1,Segment s2){
     	statusNode* n1 = get_node(p,s1);
     	statusNode* n2 = get_node(p,s2);
@@ -663,6 +802,9 @@ public:
 
 };
 
+/**
+ * @brief function to indicate if 3 points are collinear
+ **************************************/
 bool onSeg(point l,point m,point r){
 	double mx_x = max(l.x,r.x);
 	double mn_x = min(l.x,r.x);
@@ -671,6 +813,9 @@ bool onSeg(point l,point m,point r){
 	return ((m.x<=mx_x && m.x>=mn_x) && (m.y<=mx_y && m.y>=mn_y));
 }
 
+/**
+ * @brief function to indicate if 3 orientation of points.
+ **************************************/
 int find_orientation(point l,point m,point r){
 	double orient = (m.y-l.y)*(r.x-m.x) - (m.x-l.x)*(r.y-m.y);
 	if(orient>0){
@@ -685,6 +830,9 @@ int find_orientation(point l,point m,point r){
 	return -1;
 }
 
+/**
+ * @brief function to check if 2 line segments intersect.
+ **************************************/
 bool check_intersection(Segment s1,Segment s2){
 	point ps1 = s1.p;
 	point qs1 = s1.q;
@@ -715,7 +863,9 @@ bool check_intersection(Segment s1,Segment s2){
 
 }
 
-
+/**
+ * @brief function to get point of intersection of 2 line segments
+ **************************************/
 point get_intersection(Segment s1,Segment s2){
 	double x1 = s1.p.x;
 	double y1 = s1.p.y;
@@ -738,13 +888,17 @@ bool comp(const Segment&a,const Segment&b){
 }
 
 
+
+/**
+ * @brief Implementation of the line-sweep algorithm to detect and find intersection points among pairs of line segments 
+ **************************************/
 int main(){
-	vector<point> intersections;// to find
-	vector<Segment> segments; //given
-	ifstream fin; // input file stream
-	ofstream fout; // output file stream
-	fin.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_1.txt");
-	fout.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_1_op.txt");
+	vector<point> intersections;/// vector to store intersection points
+	vector<Segment> segments; /// vector to store segments
+	ifstream fin; /// input file stream
+	ofstream fout; /// output file stream
+	fin.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_2.txt");
+	fout.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_2_op.txt");
 	string line;
 	int id=0;
 	while(getline(fin,line)){
@@ -784,13 +938,15 @@ int main(){
 	eventNode* root = pts.getRoot();
     stack<eventNode*>st;
     int flg=1;
+
+    /// iterative inorder traversal of eventQueue to process event points in order
     while(flg){
     	if(root==NULL){
     		if(st.size()){
     			root=st.top();
                 cout<<st.top()->data.x<<","<<st.top()->data.y<<"==>";
                 if(root->data.loc==-1){
-                	//left endpoint
+                	///left endpoint
                 	cout<<"left"<<":"<<root->data.segId<<endl;
                 	Segment curr = segments[root->data.segId];
                     lines.balancedInsert(curr);
@@ -816,7 +972,7 @@ int main(){
 
                 }
                 else if(root->data.loc==1){
-                	// right endpoint
+                	/// right endpoint
                 	cout<<"right"<<":"<<root->data.segId<<endl;
                 	Segment curr = segments[root->data.segId];
                     int upper_id = lines.get_above_segment(curr);
@@ -835,7 +991,7 @@ int main(){
                     lines.delete_node(curr);
                 }
                 else{ 
-                	//intersection point
+                	/// intersection point
                 	cout<<"intersection"<<":"<<"{"<<root->data.segId<<","<<root->data.segId1<<"}"<<endl;
                 
                 	lines.swap_nodes(segments[root->data.segId],segments[root->data.segId1]);
@@ -844,7 +1000,7 @@ int main(){
                 	int up_seg1 = lines.get_above_segment(segments[root->data.segId1]);
                 	int down_seg1 = lines.get_below_segment(segments[root->data.segId1]);
                 	if(down_seg==root->data.segId1){
-                		// seg is above seg1
+                		/// seg is above seg1
                 		if(up_seg!=-1){
                 			Segment upper_neighbour = segments[up_seg];
                     	    if(check_intersection(segments[root->data.segId],upper_neighbour)){
@@ -863,7 +1019,7 @@ int main(){
                 		}
                 	}
                 	else if(down_seg1==root->data.segId){
-                		// seg1 above seg
+                		/// seg1 above seg
                 		if(up_seg1!=-1){
                 			Segment upper_neighbour = segments[up_seg1];
                     	    if(check_intersection(segments[root->data.segId1],upper_neighbour)){
@@ -901,7 +1057,9 @@ int main(){
     	}
 
     }
+    
 
+    /// Write the set of intersection points in output file
     fout<<"Intersection points"<<endl;
     for(int i=0;i<intersections.size();i++){
     	fout<<"Point of intersection : "<<"("<<intersections[i].x<<","<<intersections[i].y<<") "<<"between segment "<<intersections[i].segId<<" and segment "<<intersections[i].segId1<<endl;
