@@ -1,6 +1,7 @@
 /**
  * @file sweep_line.cpp
  * @brief Line Segment Intersections
+ * @author R Adarsh
  * @date 2022-03-22
  **************************************/
 
@@ -273,10 +274,15 @@ public:
     	if(p==NULL){
     		return false;
     	}
-    	if(p->data.segId==data.segId){
+    	if(p->data.x==data.x&&p->data.y==data.y&&p->data.segId==data.segId){
     		return true;
     	}
-    	return bbst_search(p->left,data)||bbst_search(p->right,data);
+    	else if (data.x<=p->data.x){
+    		return bbst_search(p->left,data);
+    	}
+    	else if(data.x>p->data.x){
+    	   return bbst_search(p->right,data);	
+    	}
     }
 
     /**
@@ -564,13 +570,18 @@ public:
 		statusNode*req = p;
 		int ans=-1;
 		while(req!=NULL){
-			if(isAbove(data.p,p->data)){
+			if(isAbove(data.p,req->data)){
 				req=req->right;
+			}
+			else if(isBelow(data.p,req->data)){
+				if(req->data.segId!=data.segId){
+				ans = req->data.segId;}
+				req=req->left;
 			}
 			else{
 				if(req->data.segId!=data.segId){
 				ans = req->data.segId;}
-				req=req->left;
+				req=req->right;
 			}
 		}
 	    return ans;
@@ -582,15 +593,21 @@ public:
      **************************************/
 	int get_below_segment(Segment data){
 		statusNode*req = p;
+
 		int ans=-1;
 		while(req!=NULL){
-			if(isBelow(data.p,p->data)){
+			if(isBelow(data.p,req->data)){
 				req=req->left;
+			}
+			else if(isAbove(data.p,req->data)){
+				if(req->data.segId!=data.segId){
+				ans = req->data.segId;}
+				req=req->right;
 			}
 			else{
 				if(req->data.segId!=data.segId){
 				ans = req->data.segId;}
-				req=req->right;
+				req=req->left;
 			}
 		}
 	    return ans;
@@ -887,7 +904,6 @@ bool comp(const Segment&a,const Segment&b){
 }
 
 
-
 /**
  * @brief Implementation of the line-sweep algorithm to detect and find intersection points among pairs of line segments 
  **************************************/
@@ -982,9 +998,9 @@ int main(){
                     	if(check_intersection(lower_neighbour,upper_neighbour)){
                     		point in = get_intersection(lower_neighbour,upper_neighbour);
                     		if(pts.search(in)==0){
-                    			intersections.push_back(in);
-                    			pts.balancedInsert(in);
-                    		}
+                    		intersections.push_back(in);
+                    		pts.balancedInsert(in);}
+                    		
                     	}
                     }
                     lines.delete_node(curr);
@@ -992,7 +1008,7 @@ int main(){
                 else{ 
                 	/// intersection point
                 	cout<<"intersection"<<":"<<"{"<<root->data.segId<<","<<root->data.segId1<<"}"<<endl;
-                
+                    
                 	lines.swap_nodes(segments[root->data.segId],segments[root->data.segId1]);
                 	int up_seg = lines.get_above_segment(segments[root->data.segId]);
                     int down_seg = lines.get_below_segment(segments[root->data.segId]);
