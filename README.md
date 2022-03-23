@@ -2,7 +2,7 @@
 
 ## Line-intersection
 
-**Shamos & Hoeys algorithm for intersection detection**
+## Shamos & Hoeys algorithm for intersection detection
 
 ### Geometric Assumptions
 
