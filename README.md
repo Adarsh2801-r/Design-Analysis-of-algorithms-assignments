@@ -4,21 +4,21 @@
 
 **Shamos & Hoeys algorithm for intersection detection**
 
-Geometric Assumptions
+### Geometric Assumptions
 
   1.  At any intersection point, not more than 2 line segments intersect .
 
   2.  No line segment has an endpoint that is a part of some other line segment.
 
-Implementation details
+### Implementation details
 
-Data Structures
+**Data Structures**
 
 1. eventQueue :   Maintains point ordered by the x-coordinate.  Implemented using Red-black tree (Balanced binary search                                           tree) which supports insert and search operations.
 
 2. sweepLineStatus : Maintains line segments with y-coordinates sorted for a given x-coordinate value. Implemented using                                                   Red-black tree (Balanced binary  tree) which supports insert , search , delete and swap operations.
 
-Sketch of the algorithm
+**Sketch of the algorithm**
 
    1. Traverse the eventQueue and process the points in order . (iterative inorder traversal)
 
@@ -32,6 +32,6 @@ Sketch of the algorithm
 
     
 
-Overall time complexity
+### Overall time complexity
 
 Efficient data structures like RB tree/ AVL tree take O(logN) for insert , search and delete operations. Thus the overall time complexity to implement line segment intersection algorithm is O((2N+I)logN) , where N = number of line segments ; I = number of intersection points .
