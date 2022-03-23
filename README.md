@@ -14,9 +14,9 @@ Implementation details
 
 Data Structures
 
-    1. eventQueue :   Maintains point ordered by the x-coordinate.  Implemented using Red-black tree (Balanced binary search                                           tree) which supports insert and search operations.
+1. eventQueue :   Maintains point ordered by the x-coordinate.  Implemented using Red-black tree (Balanced binary search                                           tree) which supports insert and search operations.
 
-    2. sweepLineStatus : Maintains line segments with y-coordinates sorted for a given x-coordinate value. Implemented using                                                   Red-black tree (Balanced binary  tree) which supports insert , search , delete and swap operations.
+2. sweepLineStatus : Maintains line segments with y-coordinates sorted for a given x-coordinate value. Implemented using                                                   Red-black tree (Balanced binary  tree) which supports insert , search , delete and swap operations.
 
 Sketch of the algorithm
 
