@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Geometric Assumptions, Implementation details">
+    <meta name="description" content="">
+    <meta name="page_type" content="np-template-header-footer-from-plugin">
+    <title>About</title>
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+<link rel="stylesheet" href="About.css" media="screen">
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 4.7.1, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    
+    
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": ""
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="About">
+    <meta property="og:type" content="website">
+  </head>
+  <body class="u-body u-xl-mode"><header class="u-clearfix u-gradient u-header u-header" id="sec-f032"><div class="u-clearfix u-sheet u-sheet-1">
+        <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+              <svg class="u-svg-link" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use></svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</g></svg>
+            </a>
+          </div>
+          <div class="u-custom-menu u-nav-container">
+            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Home.html" style="padding: 10px 20px;">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="About.html" style="padding: 10px 20px;">About</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Outputs</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Timing-Analysis.html" style="padding: 10px 20px;">Timing Analysis</a>
+</li></ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="About.html">About</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Page-1.html">Outputs</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Timing-Analysis.html">Timing Analysis</a>
+</li></ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+      </div></header>
+    <section class="u-align-left u-clearfix u-section-1" id="sec-2537">
+      <div class="u-clearfix u-sheet u-sheet-1"><span class="u-file-icon u-icon u-icon-1"><img src="images/189664.png" alt=""></span>
+        <h1 class="u-text u-text-1">&nbsp;Shamos - Hoey Algorithm Implementation</h1>
+        <div class="fr-view u-clearfix u-rich-text u-text u-text-2">
+          <h2 style="text-align: left;">
+            <span style="text-decoration: underline;">Geometric Assumptions</span>
+          </h2>
+          <p>
+            <span style="line-height: 2.0;">
+              <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">&nbsp; 1. &nbsp;At any intersection point, not more than 2 line segments intersect .</span>
+            </span>
+          </p>
+          <p>
+            <span style="line-height: 2.0;">
+              <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">&nbsp;&nbsp;</span>
+            </span>
+            <span style="font-family: Georgia, serif; font-size: 1.25rem; background-color: transparent; color: #111111;">
+              <span class="u-custom-font u-font-georgia">2. &nbsp;No line segment has an endpoint that is a part of some other line segment.</span>
+            </span>
+          </p>
+          <h2 style="text-align: left;">
+            <span style="line-height: 2; text-decoration: underline;">Implementation details</span>
+          </h2>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia" style="font-weight: 700;">
+                <span class="u-text-palette-1-base">Data Structures</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia" style="font-weight: 700;">&nbsp; &nbsp; 1. eventQueue : &nbsp;&nbsp;</span>
+              <span class="u-custom-font u-font-georgia">Maintains point ordered by the x-coordinate. &nbsp;Implemented using Red-black tree (Balanced binary search &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tree) which supports insert and search operations.</span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia" style="font-weight: 700;">&nbsp; &nbsp; 2. sweepLineStatus :&nbsp;</span>
+              <span class="u-custom-font u-font-georgia">Maintains line segments with y-coordinates sorted for a given x-coordinate value. Implemented using &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Red-black tree (Balanced binary &nbsp;tree) which supports insert , search , delete and swap operations.</span>
+            </span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia">
+              <span style="font-weight: 700; font-size: 1.25rem;">
+                <span class="u-text-palette-1-base">Sketch of the algorithm</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">&nbsp; &nbsp;1. Traverse the eventQueue and process the points in order . (iterative inorder traversal)</span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">&nbsp; &nbsp;2. Process the events as encountered by sweep line under following 3 cases :</span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">&nbsp; &nbsp; &nbsp; &nbsp;2.1 &nbsp;<span style="font-style: italic;">Point is left endpoint of segment : &nbsp;</span>Insert current segment into sweepLineStatus. Current segment is neighbour of above &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; and below segments. Check for intersection current segment with its neighbours and &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; insert those intersection points into eventQueue structure.
+              </span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">&nbsp; &nbsp; &nbsp; &nbsp;2.2 <span style="font-style: italic;">Point is right endpoint of segment:&nbsp;</span>Check for intersection between above and below line segments and add these points &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; to event Queue. Delete current segment from sweepLineStatus.
+              </span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">&nbsp; &nbsp; &nbsp; &nbsp;2.3 <span style="font-style: italic;">Point is intersection point : &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span>Report the pair of segments as intersecting. Swap their positions in &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sweepLineStatus. Check for intersections between upper segment and segment above &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;it and similarly lower segment and segment below it and add these points to &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; eventQueue.
+              </span>
+            </span>
+          </p>
+          <p>&nbsp; &nbsp;&nbsp;</p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">
+              <span style="font-weight: 700;">
+                <span class="u-text-palette-1-base">Overall time complexity</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">
+              <span style="font-weight: 700;">
+                <span class="u-text-palette-1-base">
+                  <span class="u-text-black" style="font-weight: 400;">Efficient data structures like RB tree/ AVL tree take O(logN) for insert , search and delete operations. Thus the overall time complexity to implement line segment intersection algorithm is O((2N+I)logN) , where N = number of line segments ; I = number of intersection points .</span>
+                </span>
+              </span>
+            </span>
+            <span style="font-weight: 400;">
+              <br>
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9149"><div class="u-clearfix u-sheet u-sheet-1">
+        <p class="u-text u-text-1">Group Members:<br>R ADARSH&nbsp; -&nbsp; 2019A7PS0230H&nbsp;<br>Sahaj Gupta&nbsp; -&nbsp;2019A7PS0148H&nbsp;<br>Ashutosh Tripathy -&nbsp;2019A7PS0020H 
+        </p>
+      </div></footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+      <a class="u-link" href="https://nicepage.com/website-templates" target="_blank">
+        <span>Website Templates</span>
+      </a>
+      <p class="u-text">
+        <span>created with</span>
+      </p>
+      <a class="u-link" href="" target="_blank">
+        <span>Website Builder Software</span>
+      </a>. 
+    </section>
+  </body>
+</html>
