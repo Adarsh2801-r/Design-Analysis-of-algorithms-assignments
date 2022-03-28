@@ -657,6 +657,9 @@ public:
 			return;
 		}
 		statusNode* target = get_node(p,data);
+		if(target==NULL){
+			return;
+		}
 		balancedRemove(p,target);
 	}
     
@@ -928,6 +931,9 @@ point get_intersection(Segment s1,Segment s2){
 }
 
 bool comp(const Segment&a,const Segment&b){
+	/*if(a.p.x==b.p.x){
+		return a.p.y<b.p.y;
+	}*/
 	return a.p.x<b.p.x;
 }
 
@@ -940,8 +946,11 @@ int main(){
 	vector<Segment> segments; /// vector to store segments
 	ifstream fin; /// input file stream
 	ofstream fout; /// output file stream
-	fin.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_8.txt");
-	fout.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_8_op.txt");
+	ofstream fout1;
+	fin.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_15.txt");
+	fout.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/tc_15_op.txt");
+    fout1.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/intersections_15.txt");
+	fout<<"Intersection points"<<endl;
 	string line;
 	int id=0;
     auto start = high_resolution_clock::now();
@@ -954,8 +963,8 @@ int main(){
 			pt[i]=stod(str);
 			i++;
 		}
-		point startpt = point(pt[0],pt[1],id,lft);
-		point endpt = point(pt[2],pt[3],id,rt);
+		point startpt= point(pt[0],pt[1],id,lft);            
+		point endpt=point(pt[2],pt[3],id,rt);
 		Segment s = Segment(startpt,endpt,i);
 		segments.push_back(s);
 		id++;
@@ -970,19 +979,20 @@ int main(){
 	}
 	eventQueue pts;
 	for(int i=0;i<n;i++){
-		cout<<"("<<segments[i].p.x<<","<<segments[i].p.y<<")"<<"::"<<"("<<segments[i].q.x<<","<<segments[i].q.y<<")"<<"===>"<<segments[i].segId<<endl;
-		cout<<segments[i].p.segId<<"||"<<segments[i].q.segId<<endl;
+		//cout<<"("<<segments[i].p.x<<","<<segments[i].p.y<<")"<<"::"<<"("<<segments[i].q.x<<","<<segments[i].q.y<<")"<<"===>"<<segments[i].segId<<endl;
+		//cout<<segments[i].p.segId<<"||"<<segments[i].q.segId<<endl;
 		pts.balancedInsert(segments[i].p);
 		pts.balancedInsert(segments[i].q);
 	}
-	pts.inorder();
-	cout<<"==============="<<endl;
+	//pts.inorder();
+	//cout<<"==============="<<endl;
 
 	sweepLineStatus lines;
 	eventNode* root = pts.getRoot();
     stack<eventNode*>st;
     int flg=1;
     int cou=0;
+
     /// iterative inorder traversal of eventQueue to process event points in order
     while(flg){
     	cou++;
@@ -1004,7 +1014,11 @@ int main(){
                     		point in = get_intersection(curr,upper_neighbour);
                     		if(pts.search(in)==0){
                     		intersections.push_back(in);
-                    		pts.balancedInsert(in);}
+                    		pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+
+                    	    }
                     	}
 
                     }
@@ -1012,10 +1026,12 @@ int main(){
                     	Segment lower_neighbour = segments[lower_id];
                     	if(check_intersection(curr,lower_neighbour)){
                     		point in = get_intersection(curr,lower_neighbour);
-                    		                    		if(pts.search(in)==0){
-
+                    		if(pts.search(in)==0){
                     		intersections.push_back(in);
-                    		pts.balancedInsert(in);}
+                    		pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+                    	   }
                     	}
                     }
 
@@ -1033,7 +1049,11 @@ int main(){
                     		point in = get_intersection(lower_neighbour,upper_neighbour);
                     		if(pts.search(in)==0){
                     		intersections.push_back(in);
-                    		pts.balancedInsert(in);}
+                    		pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+
+                    	   }
                     		
                     	}
                     }
@@ -1057,7 +1077,11 @@ int main(){
                     		   point in = get_intersection(segments[root->data.segId],upper_neighbour);
                     		    if(pts.search(in)==0){
                     		   intersections.push_back(in);
-                    		   pts.balancedInsert(in);}
+                    		   pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+
+                    		  }
                     	    }
                 		}
                 		if(down_seg1!=-1){
@@ -1066,7 +1090,11 @@ int main(){
                     		   point in = get_intersection(segments[root->data.segId1],lower_neighbour);
                                if(pts.search(in)==0){
                     		   intersections.push_back(in);
-                    		   pts.balancedInsert(in);}
+                    		   pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+
+                    		}
                     	    }
                 		}
                 	}
@@ -1078,7 +1106,11 @@ int main(){
                     		   point in = get_intersection(segments[root->data.segId1],upper_neighbour);
                     		   if(pts.search(in)==0){
                     		   intersections.push_back(in);
-                    		   pts.balancedInsert(in);}
+                    		   pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+
+                    		}
                     	    }
                 		}
                 		if(down_seg!=-1){
@@ -1087,16 +1119,22 @@ int main(){
                     		   point in = get_intersection(segments[root->data.segId],lower_neighbour);
                     		   if(pts.search(in)==0){
                     		   intersections.push_back(in);
-                    		   pts.balancedInsert(in);}
+                    		   pts.balancedInsert(in);
+                            fout<<"Point of intersection : "<<"("<<in.x<<","<<in.y<<") "<<"between segment "<<in.segId<<" and segment "<<in.segId1<<endl;
+    	                    fout1<<in.x<<" "<<in.y<<endl;
+
+                    		}
                     	    }
                 		}
 
                 	}
 
                 }
-                lines.inorder();
-                cout<<endl;
-                cout<<"==============="<<endl;
+             
+                //lines.inorder();
+                //cout<<endl;
+                //cout<<"==============="<<endl;
+
     			st.pop();
     			root=root->right;
     		}
@@ -1120,12 +1158,11 @@ int main(){
     cout<<cou<<","<<dur.count()<<endl;
 
     /// Write the set of intersection points in output file
-    fout<<"Intersection points"<<endl;
     for(int i=0;i<intersections.size();i++){
-    	fout<<"Point of intersection : "<<"("<<intersections[i].x<<","<<intersections[i].y<<") "<<"between segment "<<intersections[i].segId<<" and segment "<<intersections[i].segId1<<endl;
     }
 
     fout.close();
+    fout1.close();
 
     /*fout.open("C:/Users/BITS-PC/Desktop/DAA Assignment/Line intersection/TestCases/intersections_10.txt");
     
