@@ -33,3 +33,11 @@
 ### Overall time complexity
 
 Efficient data structures like RB tree/ AVL tree take O(logN) for insert , search and delete operations. Thus the overall time complexity to implement line segment intersection algorithm is O((2N+I)logN) , where N = number of line segments ; I = number of intersection points .
+
+### Sample outputs
+![dig3](https://user-images.githubusercontent.com/66625110/160598508-e215ffb9-fe3c-4bc3-ab01-d4a447e9a9c5.png)
+![dig6](https://user-images.githubusercontent.com/66625110/160598454-f7047f09-6439-4d2c-b338-b11368ff1f03.png)
+![dig12](https://user-images.githubusercontent.com/66625110/160598486-4ceff203-3c45-4b82-bef5-4156e4a47e1a.png)
+
+
+
