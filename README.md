@@ -1,6 +1,6 @@
 # Design-Analysis-of-algorithms-assignments
 
-## Bentley-Ottman algorithm for intersection detection
+## Bentley-Ottman algorithm for reporting 
 
 ### Geometric Assumptions
 
