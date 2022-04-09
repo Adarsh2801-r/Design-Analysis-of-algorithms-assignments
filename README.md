@@ -1,6 +1,6 @@
 # Design-Analysis-of-algorithms-assignments
 
-## Shamos & Hoeys algorithm for intersection detection
+## Bentley-Ottman algorithm for intersection detection
 
 ### Geometric Assumptions
 
