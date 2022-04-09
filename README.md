@@ -1,6 +1,6 @@
 # Design-Analysis-of-algorithms-assignments
 
-## Bentley-Ottman algorithm for reporting 
+## Bentley-Ottman algorithm for reporting and counting line segment intersections
 
 ### Geometric Assumptions
 
