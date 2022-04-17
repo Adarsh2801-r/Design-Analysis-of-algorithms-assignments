@@ -1,0 +1,23 @@
+Input sequence : $ACCGGUAGU
+Max base pairs possible = 2
+Base Pairings
+A(1)====U(9)
+C(2)====G(8)
+------------------------------------------------------------------------------------------------
+Input sequence : $UCGUGCGA
+Max base pairs possible = 2
+Base Pairings
+U(1)====A(8)
+C(2)====G(7)
+------------------------------------------------------------------------------------------------
+Input sequence : $UGCUCCUAGUACGAGAGGACCGGAGUG
+Max base pairs possible = 7
+Base Pairings
+C(3)====G(25)
+U(4)====A(24)
+C(5)====G(23)
+C(6)====G(22)
+G(9)====C(20)
+U(10)====A(19)
+C(12)====G(17)
+------------------------------------------------------------------------------------------------
