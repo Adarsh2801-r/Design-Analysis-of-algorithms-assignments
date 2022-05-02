@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Geometric Assumptions, Implementation details">
+    <meta name="description" content="">
+    <meta name="page_type" content="np-template-header-footer-from-plugin">
+    <title>About</title>
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+<link rel="stylesheet" href="About.css" media="screen">
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 4.7.1, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    
+    
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": ""
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="About">
+    <meta property="og:type" content="website">
+  </head>
+  <body class="u-body u-xl-mode"><header class="u-clearfix u-gradient u-header u-header" id="sec-f032"><div class="u-clearfix u-sheet u-sheet-1">
+        <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+              <svg class="u-svg-link" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use></svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</g></svg>
+            </a>
+          </div>
+          <div class="u-custom-menu u-nav-container">
+            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Home.html" style="padding: 10px 20px;">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="About.html" style="padding: 10px 20px;">About</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Outputs</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Timing-Analysis.html" style="padding: 10px 20px;">Timing Analysis</a>
+</li></ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="About.html">About</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Page-1.html">Outputs</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Timing-Analysis.html">Timing Analysis</a>
+</li></ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+      </div></header>
+    <section class="u-align-left u-clearfix u-section-1" id="sec-2537">
+      <div class="u-clearfix u-sheet u-sheet-1"><span class="u-file-icon u-icon u-icon-1"><img src="images/189664.png" alt=""></span>
+        <h1 class="u-text u-text-1">&nbsp;RNA-Folding Algorithm Implementation</h1>
+        <div class="fr-view u-clearfix u-rich-text u-text u-text-2">
+          <h2 style="text-align: left;">
+            <br>
+          </h2>
+          <h2 style="text-align: left;">
+            <span style="text-decoration: underline;">Base Pairing Rules</span>
+          </h2>
+          <p>
+            <span style="line-height: 2.0;">
+              <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">&nbsp;</span>
+            </span>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">1. (No sharp turns) The ends of each pair are separated by at least 4 intervening bases i.e. if (i , j) ε S, then i &lt; j - 4.</span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">&nbsp;2. The elements in each pair in S consist of either {A,U} or {C,G} (in either order).&nbsp;</span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">&nbsp;3. S is a matching: no base appears in more than one pair.</span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">4. (No knots) If (i,j) and (k,l) are two pairs in S, then we cannot have i &lt; k &lt; j &lt; l .</span>
+          </p>
+          <h2 style="text-align: left;">
+            <span style="line-height: 2; text-decoration: underline;">Implementation details</span>
+          </h2>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia" style="font-weight: 700;">
+                <span class="u-text-palette-1-base">Approach</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">1. OPT(i,j) is the maximum number of base pairs in a secondary structure for bibi+1 … bj. OPT(i,j) = 0, if i≥j-4.</span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">2. In the optimal secondary structure on bibi+1 …bj&nbsp;</span>
+            </span>
+          </p>
+          <p>
+            <span style="font-size: 1.25rem;">
+              <span class="u-custom-font u-font-georgia">&nbsp; &nbsp;2.1 if j is not a member of any pair, use OPT(i,j-1).</span>
+            </span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">&nbsp; &nbsp;2.2 if j pairs with some t &lt; j - 4, knot condition yields two independent sub-problems! OPT(i,t -1) and OPT(t+1,j-1)</span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia">
+              <span style="font-weight: 700; font-size: 1.25rem;">
+                <span class="u-text-palette-1-base">Recurrence Relation</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            <span style="font-family: Georgia, serif; font-size: 1.25rem; background-color: transparent; color: #111111;">&nbsp; &nbsp;</span>
+          </p>
+          <p>&nbsp; &nbsp;&nbsp;</p>
+          <p>
+            <br>
+          </p>
+          <p>
+            <br>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">
+              <span style="font-weight: 700;">
+                <span class="u-text-palette-1-base">Overall time complexity</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            <span class="u-custom-font u-font-georgia" style="font-size: 1.25rem;">
+              <span style="font-weight: 700;">
+                <span class="u-text-palette-1-base">
+                  <span class="u-text-black" style="font-weight: 400;">There are O(n^2) subproblems. Each subproblem requires linear pass between i to j-4. So overall time complexity is O(n^3).</span>
+                </span>
+              </span>
+            </span>
+            <span style="font-weight: 400;">
+              <br>
+            </span>
+          </p>
+        </div>
+        <img class="u-image u-image-default u-image-1" src="images/Capture.PNG" alt="" data-image-width="762" data-image-height="216">
+      </div>
+    </section>
+    
+    
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9149"><div class="u-clearfix u-sheet u-sheet-1">
+        <p class="u-text u-text-1">Group Members:<br>R ADARSH&nbsp; -&nbsp; 2019A7PS0230H&nbsp;<br>Sahaj Gupta&nbsp; -&nbsp;2019A7PS0148H&nbsp;<br>Ashutosh Tripathy -&nbsp;2019A7PS0020H 
+        </p>
+      </div></footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+      <a class="u-link" href="https://nicepage.com/website-templates" target="_blank">
+        <span>Website Templates</span>
+      </a>
+      <p class="u-text">
+        <span>created with</span>
+      </p>
+      <a class="u-link" href="" target="_blank">
+        <span>Website Builder Software</span>
+      </a>. 
+    </section>
+  </body>
+</html>
