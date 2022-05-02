@@ -8,7 +8,7 @@
 
 4. (No knots) If (i,j) and (k,l) are two pairs in S, then we cannot have i < k < j < l .
 
-##Implementation details
+## Implementation details
 
 **Approach**
 
